@@ -60,7 +60,7 @@ client.once('ready', async () => {
   console.log(`🤖 Logged in as ${client.user.tag}`);
 });
 
-const channelMemory = new Map(); // 🧠 Shared Memory per Channel
+const channelMemory = new Map(); // Shared Memory per Channel
 
 // Respond to @mention
 client.on('messageCreate', async (message) => {
@@ -140,7 +140,7 @@ client.on('interactionCreate', async (interaction) => {
 
   if (interaction.commandName === 'admin-reset') {
     const member = await interaction.guild.members.fetch(userId);
-    
+
     if (!member.permissions.has('Administrator')) {
       return interaction.reply({
         content: '❌ You do not have permission to use this command.',
