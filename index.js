@@ -72,6 +72,7 @@ client.on('messageCreate', async (message) => {
   const memory = channelMemory.get(channelId) || [];
 
   memory.push({ role: 'user', content: `${username} says: ${content}` });
+
   if (memory.length > MAX_MEMORY) memory.shift();
   channelMemory.set(channelId, memory);
 
@@ -82,9 +83,11 @@ client.on('messageCreate', async (message) => {
   const now = Date.now();
   const timestamps = rateLimitMap.get(userId) || [];
   const recent = timestamps.filter(t => now - t < RATE_WINDOW);
+
   if (recent.length >= RATE_LIMIT) {
     return message.reply('⏳ You’re asking too fast. Please wait a few minutes.');
   }
+
   timestamps.push(now);
   rateLimitMap.set(userId, timestamps);
 
@@ -93,9 +96,8 @@ client.on('messageCreate', async (message) => {
   if (usageCount >= MAX_USAGE) {
     return message.reply(`❌ You've reached your session limit of ${MAX_USAGE} messages.`);
   }
-  userUsageMap.set(userId, usageCount + 1);
 
-  // Add Typing Indicator
+  userUsageMap.set(userId, usageCount + 1);
   await message.channel.sendTyping();
 
   // Add System Prompt + Context
@@ -119,6 +121,7 @@ client.on('messageCreate', async (message) => {
 
     // Save Bot's Response into Channel Memory
     memory.push({ role: 'assistant', content: botReply });
+
     if (memory.length > MAX_MEMORY) memory.shift();
     channelMemory.set(channelId, memory);
 
@@ -137,6 +140,7 @@ client.on('interactionCreate', async (interaction) => {
 
   if (interaction.commandName === 'admin-reset') {
     const member = await interaction.guild.members.fetch(userId);
+    
     if (!member.permissions.has('Administrator')) {
       return interaction.reply({
         content: '❌ You do not have permission to use this command.',
@@ -145,6 +149,7 @@ client.on('interactionCreate', async (interaction) => {
     }
 
     const target = interaction.options.getUser('target');
+
     userMemory.delete(target.id);
     userUsageMap.delete(target.id);
     rateLimitMap.delete(target.id);

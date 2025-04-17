@@ -1,3 +1,3 @@
 # To Run Zavala
 
-## node index.js in Terminal 
+## node index.js in Terminal
