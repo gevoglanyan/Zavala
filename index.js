@@ -73,10 +73,12 @@ client.on('messageCreate', async (message) => {
 
   memory.push({ role: 'user', content: `${username} says: ${content}` });
 
-  if (memory.length > MAX_MEMORY) memory.shift();
+  if (memory.length > MAX_MEMORY) 
+      memory.shift();
   channelMemory.set(channelId, memory);
 
-  if (!message.mentions.has(client.user)) return;
+  if (!message.mentions.has(client.user)) 
+    return;
 
   // Rate Limiting per User
   const userId = message.author.id;
@@ -93,6 +95,7 @@ client.on('messageCreate', async (message) => {
 
   // Usage Limits
   const usageCount = userUsageMap.get(userId) || 0;
+
   if (usageCount >= MAX_USAGE) {
     return message.reply(`❌ You've reached your session limit of ${MAX_USAGE} messages.`);
   }
@@ -122,7 +125,8 @@ client.on('messageCreate', async (message) => {
     // Save Bot's Response into Channel Memory
     memory.push({ role: 'assistant', content: botReply });
 
-    if (memory.length > MAX_MEMORY) memory.shift();
+    if (memory.length > MAX_MEMORY) 
+      memory.shift();
     channelMemory.set(channelId, memory);
 
     await message.reply(botReply);
